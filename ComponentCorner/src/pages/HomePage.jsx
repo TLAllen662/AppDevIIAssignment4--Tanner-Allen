@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../App.css'
 import CartItem from '../components/CartItem'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 import ProductCard from '../components/ProductCard'
+
+const CART_STORAGE_KEY = 'cart'
 
 function HomePage() {
   const products = [
@@ -52,7 +54,14 @@ function HomePage() {
     }
   ]
 
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY)
+    return savedCart ? JSON.parse(savedCart) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
+  }, [cart])
 
   const addToCart = (product) => {
     console.log('Adding to cart:', product)
